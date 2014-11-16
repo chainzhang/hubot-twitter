@@ -13,7 +13,8 @@ class Twitter extends Adapter
      text = str
      tweetsText = str.split('\n')
      tweetsText.forEach (tweetText) =>
-       @bot.send(user.user.user, tweetText, user.user.status_id )
+       to_user = (user.user.user) || undefined
+       @bot.send(to_user, tweetText, user.user.status_id )
 
  reply: (user, strings...) ->
    console.log "Replying"
@@ -79,7 +80,9 @@ class TwitterStreaming extends EventEmitter
 
  send : (user, tweetText, in_reply_to_status_id) ->
         console.log "send twitt to #{user} with text #{tweetText}"
-        @consumer.post "https://api.twitter.com/1.1/statuses/update.json", @token, @tokensecret, { status: "@#{user} #{tweetText}", in_reply_to_status_id: in_reply_to_status_id },'UTF-8',  (error, data, response) ->
+        the_tweet = "#{tweetText}"
+        the_tweet = ("@#{user}" + the_tweet) if user?
+        @consumer.post "https://api.twitter.com/1.1/statuses/update.json", @token, @tokensecret, { status: the_tweet, in_reply_to_status_id: in_reply_to_status_id },'UTF-8',  (error, data, response) ->
           if error
             console.log "twitter send error: #{error} #{data}"
           console.log "Status #{response.statusCode}"
