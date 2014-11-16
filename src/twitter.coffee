@@ -79,7 +79,10 @@ class TwitterStreaming extends EventEmitter
    @post "/1.1/statuses/filter.json?track=#{track}", '', callback
 
  send : (user, tweetText, in_reply_to_status_id) ->
-        console.log "send twitt to #{user} with text #{tweetText}"
+        if user?
+          console.log "send twitt to #{user} with text #{tweetText}"
+        else
+          console.log "tweet #{tweetText}"
         the_tweet = "#{tweetText}"
         the_tweet = ("@#{user}" + the_tweet) if user?
         @consumer.post "https://api.twitter.com/1.1/statuses/update.json", @token, @tokensecret, { status: the_tweet, in_reply_to_status_id: in_reply_to_status_id },'UTF-8',  (error, data, response) ->
