@@ -23,7 +23,9 @@ class Twitter extends Adapter
  reply: (user, strings...) ->
    console.log "Replying"
    strings.forEach (text) =>
-       @bot.send(user,text)
+       to_user = (user.user.user) if user?
+       status_id = (user.user.status_id) if user?
+       @bot.send(to_user, text, status_id)
  
  command: (command, strings...) ->
     console.log "Command" + command
