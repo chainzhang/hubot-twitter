@@ -8,13 +8,17 @@ oauth        = require('oauth')
 class Twitter extends Adapter
 
  send: (user, strings...) ->
-   console.log "Sending strings to user: " + user.screen_name
+   if user?
+     console.log "Sending strings to user: " + user.screen_name
+   else
+     console.log "tweeting"
    strings.forEach (str) =>
      text = str
      tweetsText = str.split('\n')
      tweetsText.forEach (tweetText) =>
-       to_user = (user.user.user) || undefined
-       @bot.send(to_user, tweetText, user.user.status_id )
+       to_user = (user.user.user) if user?
+       status_id = (user.user.status_id) if user?
+       @bot.send(to_user, tweetText, status_id )
 
  reply: (user, strings...) ->
    console.log "Replying"
